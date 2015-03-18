@@ -48,20 +48,26 @@ public class TodoListManagerActivity extends ActionBarActivity {
         ArrayList<String> newList = new ArrayList<String>();
         int numOfItems = lv.getCount();
 
+        // Updating the list with all items
         for(int i=0; i<numOfItems; i++) {
             String selectedFromList = (lv.getItemAtPosition(i).toString());
             newList.add(selectedFromList);
         }
+
+        // Adding the new item to the head of the list
         newList.add(0,newTask);
+
+        // Clean the editText after item was added
         edtNewItem.setText("");
 
 
         ArrayAdapter<String> todoArrayAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, newList){
-
             @Override
             public View getView(int position, View convertView,
                                 ViewGroup parent) {
+                // Controls the colors of list items
+
                 View view = super.getView(position, convertView, parent);
                 TextView textView = (TextView) view.findViewById(android.R.id.text1);
                 if ((position % 2) == 0) {
@@ -75,7 +81,10 @@ public class TodoListManagerActivity extends ActionBarActivity {
 
         ListView list = (ListView)findViewById(R.id.lstTodoItems);
         list.setAdapter(todoArrayAdapter);
+
+        // Enable the long click context menu option
         registerForContextMenu(list);
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -86,6 +95,8 @@ public class TodoListManagerActivity extends ActionBarActivity {
             ListView lv = (ListView) v;
             AdapterView.AdapterContextMenuInfo contextMenuAdapter = (AdapterView.AdapterContextMenuInfo) menuInfo;
             menu.setHeaderTitle(lv.getItemAtPosition(contextMenuAdapter.position).toString());
+
+            // Context menu items
             menu.add("Delete Item");
         }
     }
@@ -110,12 +121,11 @@ public class TodoListManagerActivity extends ActionBarActivity {
             @Override
             public View getView(int position, View convertView,
                                 ViewGroup parent) {
+                // Controls the colors of list items
+
                 View view = super.getView(position, convertView, parent);
                 TextView textView = (TextView) view.findViewById(android.R.id.text1);
                 if ((position % 2) == 0) {
-
-
-            /*YOUR CHOICE OF COLOR*/
                     textView.setTextColor(Color.RED);
                 } else {
                     textView.setTextColor(Color.BLUE);
@@ -128,7 +138,11 @@ public class TodoListManagerActivity extends ActionBarActivity {
         newList.remove(info.position);
         ListView list = (ListView)findViewById(R.id.lstTodoItems);
         list.setAdapter(todoArrayAdapter);
+
+        // Enable the long click context menu option
         registerForContextMenu(list);
+
+
         return super.onOptionsItemSelected(item);
 
     }
