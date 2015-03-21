@@ -3,4 +3,13 @@
     <string name="dialogName">Add New Item</string>
     <string name="signin">SIGNIN</string>
     <string name="cancel">Cancel</string>
+    <string name="deleteItem">Delete Item</string>
+    <string name="upCaseCall">Call</string>
+    <string name="lowCaseCall">call</string>
+    <string name="callAutoHeader">tel:</string>
+    <string name="myDateFormat">dd-MM-yyyy</string>
+    <string name="newItemKey">newItem</string>
+    <string name="cancelButtonText">Cancel</string>
+    <string name="OKButtonText">OK</string>
+    <string name="addMenuButtonText">Add</string>
 </resources>

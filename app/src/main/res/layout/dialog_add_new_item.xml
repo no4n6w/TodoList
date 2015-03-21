@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:id="@+id/edtNewItem"
-
         android:layout_weight="1" />
 
 
@@ -18,7 +17,6 @@
         android:id="@+id/datePicker"
         android:layout_width="fill_parent"
         android:calendarViewShown="false"
-
         android:layout_height="wrap_content" />
 
 
@@ -31,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancel" />
+            android:text="@string/cancelButtonText" />
 
         <Space
             android:layout_width="40dp"
@@ -42,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="OK" />
+            android:text="@string/OKButtonText" />
 
     </LinearLayout>
 

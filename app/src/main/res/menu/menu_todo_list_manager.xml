@@ -5,7 +5,7 @@
 
 
     <item android:id="@+id/menuItemAdd"
-        android:title="Add"
+        android:title="@string/addMenuButtonText"
         compat:showAsAction="always"/>
 
 </menu>

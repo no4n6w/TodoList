@@ -11,19 +11,19 @@ import android.widget.EditText;
 
 public class AddItemDialogActivity extends Activity implements View.OnClickListener {
 
-    public EditText mNameEditText;
-    public Button mOk;
-    public Button mCancel;
+    public EditText itemEditText;
+    public Button bOk;
+    public Button bCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_add_new_item);
-        mNameEditText = (EditText) findViewById(R.id.edtNewItem);
-        mOk = (Button) findViewById(R.id.ok);
-        mCancel = (Button) findViewById(R.id.cancel);
-        mOk.setOnClickListener(this);
-        mCancel.setOnClickListener(this);
+        itemEditText = (EditText) findViewById(R.id.edtNewItem);
+        bOk = (Button) findViewById(R.id.ok);
+        bCancel = (Button) findViewById(R.id.cancel);
+        bOk.setOnClickListener(this);
+        bCancel.setOnClickListener(this);
     }
 
     @Override
@@ -31,8 +31,8 @@ public class AddItemDialogActivity extends Activity implements View.OnClickListe
 
         Intent intent = getIntent();
         switch (v.getId()) {
-            case R.id.ok:
-                String itemText = mNameEditText.getText().toString();
+            case R.id.ok: // Pass the new item to the main activity
+                String itemText = itemEditText.getText().toString();
                 DatePicker datePicker= (DatePicker) findViewById(R.id.datePicker);
                 int day = datePicker.getDayOfMonth();
                 int month = datePicker.getMonth() + 1;
@@ -40,11 +40,11 @@ public class AddItemDialogActivity extends Activity implements View.OnClickListe
 
                 String itemDate = day + "-" + month + "-" + year;
                 String fullItem = itemText + " " + itemDate;
-
-                intent.putExtra("newItem", fullItem);
+                intent.putExtra(getString(R.string.newItemKey), fullItem);
                 setResult(RESULT_OK, intent);
                 break;
-            case R.id.cancel:
+
+            case R.id.cancel: // Cancel
                 setResult(RESULT_CANCELED, intent);
                 break;
         }
