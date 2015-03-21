@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -98,7 +97,7 @@ public class TodoListManagerActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
 
 
-        Intent intent = new Intent(this, NameDialogActivity.class);
+        Intent intent = new Intent(this, AddItemDialogActivity.class);
         startActivityForResult(intent, 1);
         return super.onOptionsItemSelected(item);
     }
@@ -154,7 +153,7 @@ public class TodoListManagerActivity extends ActionBarActivity {
             // Create one or two context menu items
             menu.add(menu.NONE, 1, 1, "Delete Item"); // Delete Item
             if (itemName.startsWith("call") || itemName.startsWith("Call")){
-                menu.add(menu.NONE, 2, 2, itemName.substring(0,itemName.lastIndexOf(" ")));
+                menu.add(menu.NONE, 2, 2, itemName.substring(0, itemName.lastIndexOf(" ")));
             }
         }
     }

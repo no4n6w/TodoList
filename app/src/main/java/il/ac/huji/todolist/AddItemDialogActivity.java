@@ -8,10 +8,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
-/**
- * Created by Michael on 3/20/2015.
- */
-public class NameDialogActivity extends Activity implements View.OnClickListener {
+
+public class AddItemDialogActivity extends Activity implements View.OnClickListener {
 
     public EditText mNameEditText;
     public Button mOk;
@@ -20,7 +18,7 @@ public class NameDialogActivity extends Activity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_signin);
+        setContentView(R.layout.dialog_add_new_item);
         mNameEditText = (EditText) findViewById(R.id.edtNewItem);
         mOk = (Button) findViewById(R.id.ok);
         mCancel = (Button) findViewById(R.id.cancel);
