@@ -16,6 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".NameDialogActivity"
+            android:label="@string/dialogName"
+            android:theme="@android:style/Theme.Dialog" />
     </application>
-
+    <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
 </manifest>

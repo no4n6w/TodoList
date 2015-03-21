@@ -1,19 +1,26 @@
 package il.ac.huji.todolist;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.lang.String;
+import java.util.Date;
+
 
 
 public class TodoListManagerActivity extends ActionBarActivity {
@@ -22,28 +29,9 @@ public class TodoListManagerActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_list_manager);
-    }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_todo_list_manager, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-        EditText edtNewItem;
-        edtNewItem = (EditText) findViewById(R.id.edtNewItem);
         ListView lv;
         lv = (ListView) findViewById(R.id.lstTodoItems);
-
-        String newTask = edtNewItem.getText().toString();
 
         ArrayList<String> newList = new ArrayList<String>();
         int numOfItems = lv.getCount();
@@ -54,39 +42,104 @@ public class TodoListManagerActivity extends ActionBarActivity {
             newList.add(selectedFromList);
         }
 
-        // Adding the new item to the head of the list
-        newList.add(0,newTask);
-
-        // Clean the editText after item was added
-        edtNewItem.setText("");
-
-
         ArrayAdapter<String> todoArrayAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, newList){
-            @Override
-            public View getView(int position, View convertView,
-                                ViewGroup parent) {
-                // Controls the colors of list items
 
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 TextView textView = (TextView) view.findViewById(android.R.id.text1);
-                if ((position % 2) == 0) {
+
+                ListView lv = (ListView) findViewById(R.id.lstTodoItems);
+                String item = lv.getItemAtPosition(position).toString();
+
+                ParsePosition ind = new ParsePosition(item.lastIndexOf(" ")+1);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                Date date = sdf.parse(item,ind);
+
+                Date currentDate = new Date();
+
+
+                if (date.compareTo(currentDate) < 0) {
                     textView.setTextColor(Color.RED);
-                } else {
-                    textView.setTextColor(Color.BLUE);
                 }
+
                 return view;
-            }
+            };
+
+
         };
+
+//---------------------------------------------------------------------------
+
 
         ListView list = (ListView)findViewById(R.id.lstTodoItems);
         list.setAdapter(todoArrayAdapter);
-
-        // Enable the long click context menu option
         registerForContextMenu(list);
 
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_todo_list_manager, menu);
+        return true;
+
+    }
+
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+
+        Intent intent = new Intent(this, NameDialogActivity.class);
+        startActivityForResult(intent, 1);
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(resultCode == RESULT_OK && data.getExtras().containsKey("newItem")) {
+            String name = data.getExtras().getString("newItem");
+
+            ListView lv;
+            lv = (ListView) findViewById(R.id.lstTodoItems);
+
+            String newTask = name;
+
+            ArrayList<String> newList = new ArrayList<String>();
+            int numOfItems = lv.getCount();
+
+            // Updating the list with all items
+            for(int i=0; i<numOfItems; i++) {
+                String selectedFromList = (lv.getItemAtPosition(i).toString());
+                newList.add(selectedFromList);
+            }
+
+            // Adding the new item to the head of the list
+            newList.add(0,newTask);
+
+            ArrayAdapter<String> todoArrayAdapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, newList);
+
+
+
+            ListView list = (ListView)findViewById(R.id.lstTodoItems);
+            list.setAdapter(todoArrayAdapter);
+
+            // Enable the long click context menu option
+            registerForContextMenu(list);
+
+        }
+    }
+
 
 
     @Override
@@ -94,10 +147,15 @@ public class TodoListManagerActivity extends ActionBarActivity {
         if (v.getId() == R.id.lstTodoItems) {
             ListView lv = (ListView) v;
             AdapterView.AdapterContextMenuInfo contextMenuAdapter = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            menu.setHeaderTitle(lv.getItemAtPosition(contextMenuAdapter.position).toString());
+            String itemName = lv.getItemAtPosition(contextMenuAdapter.position).toString();
+            menu.setHeaderTitle(itemName.substring(0,itemName.lastIndexOf(" ")));
 
-            // Context menu items
-            menu.add("Delete Item");
+
+            // Create one or two context menu items
+            menu.add(menu.NONE, 1, 1, "Delete Item"); // Delete Item
+            if (itemName.startsWith("call") || itemName.startsWith("Call")){
+                menu.add(menu.NONE, 2, 2, itemName.substring(0,itemName.lastIndexOf(" ")));
+            }
         }
     }
     @Override
@@ -105,42 +163,40 @@ public class TodoListManagerActivity extends ActionBarActivity {
 
         ListView lv;
         lv = (ListView) findViewById(R.id.lstTodoItems);
+        AdapterView.AdapterContextMenuInfo infoList = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-        ArrayList<String> newList = new ArrayList<String>();
-        int numOfItems = lv.getCount();
+        switch(item.getItemId()){
+            case 1: // Item is Deleted from the list
 
-        for(int i=0; i<numOfItems; i++) {
-            String selectedFromList = (lv.getItemAtPosition(i).toString());
-            newList.add(selectedFromList);
+                ArrayList<String> newList = new ArrayList<String>();
+                int numOfItems = lv.getCount();
+
+                for (int i = 0; i < numOfItems; i++) {
+                    String selectedFromList = (lv.getItemAtPosition(i).toString());
+                    newList.add(selectedFromList);
+                }
+
+                ArrayAdapter<String> todoArrayAdapter = new ArrayAdapter<String>(this,
+                        android.R.layout.simple_list_item_1, newList) {};
+
+                newList.remove(infoList.position);
+                ListView list = (ListView) findViewById(R.id.lstTodoItems);
+                list.setAdapter(todoArrayAdapter);
+
+                // Enable the long click context menu option
+                registerForContextMenu(list);
+
+                break;
+
+            case 2: // Call action was chosen by the user
+
+                String callStr =  lv.getItemAtPosition(infoList.position).toString();
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + callStr.substring(5,callStr.lastIndexOf(" "))));
+                startActivity(intent);
+                break;
         }
 
-
-        ArrayAdapter<String> todoArrayAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, newList){
-
-            @Override
-            public View getView(int position, View convertView,
-                                ViewGroup parent) {
-                // Controls the colors of list items
-
-                View view = super.getView(position, convertView, parent);
-                TextView textView = (TextView) view.findViewById(android.R.id.text1);
-                if ((position % 2) == 0) {
-                    textView.setTextColor(Color.RED);
-                } else {
-                    textView.setTextColor(Color.BLUE);
-                }
-                return view;
-            }
-        };
-
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        newList.remove(info.position);
-        ListView list = (ListView)findViewById(R.id.lstTodoItems);
-        list.setAdapter(todoArrayAdapter);
-
-        // Enable the long click context menu option
-        registerForContextMenu(list);
 
 
         return super.onOptionsItemSelected(item);
