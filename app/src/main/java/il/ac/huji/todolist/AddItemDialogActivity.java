@@ -33,13 +33,13 @@ public class AddItemDialogActivity extends Activity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.ok: // Pass the new item to the main activity
                 String itemText = itemEditText.getText().toString();
-                DatePicker datePicker= (DatePicker) findViewById(R.id.datePicker);
+                DatePicker datePicker = (DatePicker) findViewById(R.id.datePicker);
                 int day = datePicker.getDayOfMonth();
                 int month = datePicker.getMonth() + 1;
                 int year = datePicker.getYear();
 
                 String itemDate = day + "-" + month + "-" + year;
-                String fullItem = itemText + " " + itemDate;
+                String fullItem = itemText + " " + itemDate;         // Builds a string that contains all the item
                 intent.putExtra(getString(R.string.newItemKey), fullItem);
                 setResult(RESULT_OK, intent);
                 break;
